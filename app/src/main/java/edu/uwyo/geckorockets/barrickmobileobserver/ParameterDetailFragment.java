@@ -9,7 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import edu.uwyo.geckorockets.barrickmobileobserver.dummy.DummyContent;
+import edu.uwyo.geckorockets.barrickmobileobserver.app.DummyContent;
 
 /**
  * A fragment representing a single Parameter detail screen.

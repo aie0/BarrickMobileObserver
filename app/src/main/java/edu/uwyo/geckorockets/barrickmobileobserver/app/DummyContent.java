@@ -1,4 +1,4 @@
-package edu.uwyo.geckorockets.barrickmobileobserver.dummy;
+package edu.uwyo.geckorockets.barrickmobileobserver.app;
 
 import java.util.ArrayList;
 import java.util.HashMap;

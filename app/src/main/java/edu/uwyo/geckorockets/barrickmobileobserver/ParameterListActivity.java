@@ -4,19 +4,22 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.constraint.ConstraintLayout;
+import android.support.design.widget.AppBarLayout;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import edu.uwyo.geckorockets.barrickmobileobserver.app.DummyContent;
 
-import edu.uwyo.geckorockets.barrickmobileobserver.dummy.DummyContent;
-
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -35,21 +38,31 @@ public class ParameterListActivity extends AppCompatActivity {
      */
     private boolean mTwoPane;
 
+    private enum statuses {OK, ALERT, WARNING, MAINTENANCE, UNKNOWN}
+    private HashMap<statuses, Integer> colorMap = new HashMap<>();
+
+    private TextView statusText;
+    private ImageView statusPane;
+
+    // TEMP
+    statuses status = statuses.OK;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_parameter_list);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        toolbar.setTitle(getTitle());
-
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                if (status.ordinal() >= 4) {
+                    status = statuses.values()[0];
+                }
+                else
+                    status = statuses.values()[status.ordinal() + 1];
+
+                setStatus(statuses.values()[status.ordinal()]);
             }
         });
 
@@ -64,6 +77,22 @@ public class ParameterListActivity extends AppCompatActivity {
             // activity should be in two-pane mode.
             mTwoPane = true;
         }
+
+        colorMap.put(statuses.OK, R.color.colorOk);
+        colorMap.put(statuses.ALERT, R.color.colorAlert);
+        colorMap.put(statuses.WARNING, R.color.colorWarn);
+        colorMap.put(statuses.MAINTENANCE, R.color.colorDown);
+        colorMap.put(statuses.UNKNOWN, R.color.colorUnknown);
+
+        statusText = (TextView) findViewById(R.id.currentStatus);
+        statusPane = (ImageView) findViewById(R.id.statusPane);
+
+        setStatus(statuses.OK);
+    }
+
+    public void setStatus (statuses newStatus) {
+        statusText.setText(newStatus.toString());
+        statusPane.setImageResource(colorMap.get(newStatus));
     }
 
     private void setupRecyclerView(@NonNull RecyclerView recyclerView) {
