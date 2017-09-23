@@ -4,20 +4,16 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.constraint.ConstraintLayout;
-import android.support.design.widget.AppBarLayout;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import edu.uwyo.geckorockets.barrickmobileobserver.app.DummyContent;
+import edu.uwyo.geckorockets.barrickmobileobserver.app.Content;
 
 import java.util.HashMap;
 import java.util.List;
@@ -38,7 +34,7 @@ public class ParameterListActivity extends AppCompatActivity {
      */
     private boolean mTwoPane;
 
-    private enum statuses {OK, ALERT, WARNING, MAINTENANCE, UNKNOWN}
+    private enum statuses {OK, ALERT, WARNING, DOWN, UNKNOWN}
     private HashMap<statuses, Integer> colorMap = new HashMap<>();
 
     private TextView statusText;
@@ -81,7 +77,7 @@ public class ParameterListActivity extends AppCompatActivity {
         colorMap.put(statuses.OK, R.color.colorOk);
         colorMap.put(statuses.ALERT, R.color.colorAlert);
         colorMap.put(statuses.WARNING, R.color.colorWarn);
-        colorMap.put(statuses.MAINTENANCE, R.color.colorDown);
+        colorMap.put(statuses.DOWN, R.color.colorDown);
         colorMap.put(statuses.UNKNOWN, R.color.colorUnknown);
 
         statusText = (TextView) findViewById(R.id.currentStatus);
@@ -96,15 +92,15 @@ public class ParameterListActivity extends AppCompatActivity {
     }
 
     private void setupRecyclerView(@NonNull RecyclerView recyclerView) {
-        recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(DummyContent.ITEMS));
+        recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(Content.ITEMS));
     }
 
     public class SimpleItemRecyclerViewAdapter
             extends RecyclerView.Adapter<SimpleItemRecyclerViewAdapter.ViewHolder> {
 
-        private final List<DummyContent.DummyItem> mValues;
+        private final List<Content.Parameter> mValues;
 
-        public SimpleItemRecyclerViewAdapter(List<DummyContent.DummyItem> items) {
+        public SimpleItemRecyclerViewAdapter(List<Content.Parameter> items) {
             mValues = items;
         }
 
@@ -120,6 +116,7 @@ public class ParameterListActivity extends AppCompatActivity {
             holder.mItem = mValues.get(position);
             holder.mIdView.setText(mValues.get(position).id);
             holder.mContentView.setText(mValues.get(position).content);
+            holder.mUnitView.setText(mValues.get(position).unit);
 
             holder.mView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -152,13 +149,15 @@ public class ParameterListActivity extends AppCompatActivity {
             public final View mView;
             public final TextView mIdView;
             public final TextView mContentView;
-            public DummyContent.DummyItem mItem;
+            public final TextView mUnitView;
+            public Content.Parameter mItem;
 
             public ViewHolder(View view) {
                 super(view);
                 mView = view;
-                mIdView = (TextView) view.findViewById(R.id.id);
-                mContentView = (TextView) view.findViewById(R.id.content);
+                mIdView = (TextView) view.findViewById(R.id.parameterId);
+                mContentView = (TextView) view.findViewById(R.id.parameterValue);
+                mUnitView = (TextView) view.findViewById(R.id.parameterUnit);
             }
 
             @Override

@@ -11,17 +11,17 @@ import java.util.Map;
  * <p>
  * TODO: Replace all uses of this class before publishing your app.
  */
-public class DummyContent {
+public class Content {
 
     /**
      * An array of sample (dummy) items.
      */
-    public static final List<DummyItem> ITEMS = new ArrayList<DummyItem>();
+    public static final List<Parameter> ITEMS = new ArrayList<Parameter>();
 
     /**
      * A map of sample (dummy) items, by ID.
      */
-    public static final Map<String, DummyItem> ITEM_MAP = new HashMap<String, DummyItem>();
+    public static final Map<String, Parameter> ITEM_MAP = new HashMap<String, Parameter>();
 
     private static final int COUNT = 25;
 
@@ -32,13 +32,13 @@ public class DummyContent {
         }
     }
 
-    private static void addItem(DummyItem item) {
+    private static void addItem(Parameter item) {
         ITEMS.add(item);
         ITEM_MAP.put(item.id, item);
     }
 
-    private static DummyItem createDummyItem(int position) {
-        return new DummyItem(String.valueOf(position), "Item " + position, makeDetails(position));
+    private static Parameter createDummyItem(int position) {
+        return new Parameter(String.valueOf(position), "Parameter " + position, "UNIT", makeDetails(position));
     }
 
     private static String makeDetails(int position) {
@@ -53,14 +53,16 @@ public class DummyContent {
     /**
      * A dummy item representing a piece of content.
      */
-    public static class DummyItem {
+    public static class Parameter {
         public final String id;
         public final String content;
+        public final String unit;
         public final String details;
 
-        public DummyItem(String id, String content, String details) {
+        public Parameter(String id, String content, String unit, String details) {
             this.id = id;
             this.content = content;
+            this.unit = unit;
             this.details = details;
         }
 
