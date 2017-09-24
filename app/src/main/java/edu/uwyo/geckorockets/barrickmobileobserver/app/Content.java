@@ -95,7 +95,6 @@ public class Content {
         }
     }
 
-
     public static class Parameter {
         public final String id;
         public final String content;
