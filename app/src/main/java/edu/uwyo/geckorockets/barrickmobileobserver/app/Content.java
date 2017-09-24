@@ -20,8 +20,8 @@ public class Content {
 
     public static int currentRow = 1;
 
-    public static final List<Parameter> Items = new ArrayList<>();
-    public static final Map<String, Parameter> ItemMap = new HashMap<>();
+    public static List<Parameter> Items = new ArrayList<>();
+    public static Map<String, Parameter> ItemMap = new HashMap<>();
 
     private static Vector<Vector<String>> data = new Vector<>();
     private static InputStream inputFile = null;
@@ -32,6 +32,17 @@ public class Content {
         inputFile = MyApplication.getAppContext().getResources().openRawResource(R.raw.demo_data);
         data = parseCsv(inputFile);
 
+        populate();
+    }
+
+    public static void nextRow() {
+        currentRow++;
+        Items = new ArrayList<>();
+        ItemMap = new HashMap<>();
+        populate();
+    }
+
+    private static void populate() {
         parameterCount = data.elementAt(0).size();
 
         for (int i = 1; i < parameterCount; i++) {

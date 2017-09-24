@@ -40,6 +40,8 @@ public class ParameterListActivity extends AppCompatActivity {
     private TextView statusText;
     private ImageView statusPane;
 
+    public RecyclerView recyclerView;
+
     // TEMP
     statuses status = statuses.OK;
 
@@ -48,23 +50,19 @@ public class ParameterListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_parameter_list);
 
+        recyclerView = (RecyclerView) findViewById(R.id.parameter_list);
+        assert recyclerView != null;
+
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (status.ordinal() >= 4) {
-                    status = statuses.values()[0];
-                }
-                else
-                    status = statuses.values()[status.ordinal() + 1];
-
-                setStatus(statuses.values()[status.ordinal()]);
+                Content.nextRow();
+                setupRecyclerView(recyclerView);
             }
         });
 
-        View recyclerView = findViewById(R.id.parameter_list);
-        assert recyclerView != null;
-        setupRecyclerView((RecyclerView) recyclerView);
+        setupRecyclerView((RecyclerView) findViewById(R.id.parameter_list));
 
         if (findViewById(R.id.parameter_detail_container) != null) {
             // The detail container view will be present only in the
