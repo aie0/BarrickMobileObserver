@@ -78,14 +78,14 @@ public class Content {
 
     private static double getAverage(int position) {
         double sum = 0.0;
-        for (int i = position; i >= topAvgIndexes.elementAt(position); i--) {
+        for (int i = currentRow; i >= topAvgIndexes.elementAt(position); i--) {
             try {
                 sum += Double.parseDouble(data.elementAt(i).elementAt(position));
             } catch (Exception ex) {
                 topAvgIndexes.set(position, i);
             }
         }
-        return sum / (position - topAvgIndexes.elementAt(position));
+        return sum / (currentRow - topAvgIndexes.elementAt(position) + 1);
     }
 
     private static void populate() {
