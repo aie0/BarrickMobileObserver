@@ -30,8 +30,12 @@ public class Content {
 
     private static HashMap<statuses, Integer> lightColorMap = new HashMap<>();
 
-
     private static int parameterCount;
+
+    private static Vector<Double> averages = new Vector<>();
+    private static Vector<Double> stdDevs = new Vector<>();
+
+    private static final double sentinel = -9999.99;
 
     static {
         lightColorMap.put(statuses.OK, R.color.colorOkLight);
@@ -42,6 +46,28 @@ public class Content {
 
         inputFile = MyApplication.getAppContext().getResources().openRawResource(R.raw.demo_data);
         data = parseCsv(inputFile);
+
+        Vector<String> averageStrings = data.elementAt(2);
+        for (String average:averageStrings) {
+            double value;
+            try {
+                value = Double.parseDouble(average);
+            } catch (Exception ex){
+                value = sentinel;
+            }
+            averages.add(value);
+        }
+
+        Vector<String> stdDevStrings = data.elementAt(3);
+        for (String average:stdDevStrings) {
+            double value;
+            try {
+                value = Double.parseDouble(average);
+            } catch (Exception ex){
+                value = sentinel;
+            }
+            stdDevs.add(value);
+        }
 
         populate();
     }
@@ -71,7 +97,7 @@ public class Content {
                 data.elementAt(currentRow).elementAt(position),
                 data.elementAt(1).elementAt(position),
                 getHistory(position),
-                lightColorMap.get(statuses.WARNING));
+                getColor(position));
     }
 
     private static String getHistory(int position) {
@@ -81,6 +107,33 @@ public class Content {
             builder.append("\nMore details information here.");
         }
         return builder.toString();
+    }
+
+    private static int getColor(int position) {
+        String stringValue = data.elementAt(currentRow).elementAt(position);
+        double value;
+        try {
+            value = Double.parseDouble(stringValue);
+        } catch (Exception ex){
+            value = sentinel;
+        }
+
+        double alertUpper = averages.elementAt(position) + stdDevs.elementAt(position);
+        double alertLower = averages.elementAt(position) - stdDevs.elementAt(position);
+
+        double warnUpper = averages.elementAt(position) + (2 * stdDevs.elementAt(position));
+        double warnLower = averages.elementAt(position) - (2 * stdDevs.elementAt(position));
+
+        if (value == sentinel)
+            return lightColorMap.get(statuses.UNKNOWN);
+        else if (value > warnUpper || value < warnLower)
+            return lightColorMap.get(statuses.WARNING);
+        else if (value > alertUpper || value < alertLower)
+            return lightColorMap.get(statuses.ALERT);
+        else if (value == 0.0)
+            return lightColorMap.get(statuses.DOWN);
+        else
+            return lightColorMap.get(statuses.OK);
     }
 
     private static Vector<Vector<String>> parseCsv(InputStream file) {
