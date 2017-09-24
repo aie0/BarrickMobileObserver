@@ -61,6 +61,7 @@ public class ParameterListActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Content.nextRow();
                 setupRecyclerView(recyclerView);
+                setStatus(getWorstStatus());
             }
         });
 
@@ -82,11 +83,35 @@ public class ParameterListActivity extends AppCompatActivity {
 
         statusText = (TextView) findViewById(R.id.currentStatus);
         statusPane = (ImageView) findViewById(R.id.statusPane);
+
+        setStatus(getWorstStatus());
     }
 
     public void setStatus (statuses newStatus) {
         statusText.setText(newStatus.toString());
         statusPane.setImageResource(colorMap.get(newStatus));
+    }
+
+    private statuses getWorstStatus() {
+        if (parametersHasColor(R.color.colorWarnLight))
+            return statuses.WARNING;
+        else if (parametersHasColor(R.color.colorAlertLight))
+            return statuses.ALERT;
+        else if (parametersHasColor(R.color.colorDownLight))
+            return statuses.DOWN;
+        else if (parametersHasColor(R.color.colorUnknownLight))
+            return statuses.UNKNOWN;
+        else
+            return statuses.OK;
+    }
+
+    private boolean parametersHasColor(int testColor) {
+        boolean has = false;
+        for (Content.Parameter item:Content.Items) {
+            if (item.color == testColor)
+                has = true;
+        }
+        return has;
     }
 
     private void setupRecyclerView(@NonNull RecyclerView recyclerView) {
