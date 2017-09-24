@@ -18,7 +18,7 @@ import edu.uwyo.geckorockets.barrickmobileobserver.R;
 
 public class Content {
 
-    public static int currentRow = 2;
+    private static int currentRow = 4;
 
     public static List<Parameter> Items = new ArrayList<>();
     public static Map<String, Parameter> ItemMap = new HashMap<>();
