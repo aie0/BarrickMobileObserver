@@ -92,7 +92,7 @@ public class ParameterListActivity extends AppCompatActivity {
     }
 
     private void setupRecyclerView(@NonNull RecyclerView recyclerView) {
-        recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(Content.ITEMS));
+        recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(Content.Items));
     }
 
     public class SimpleItemRecyclerViewAdapter

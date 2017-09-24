@@ -1,40 +1,43 @@
 package edu.uwyo.geckorockets.barrickmobileobserver.app;
 
+import android.util.Log;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Vector;
 
-/**
- * Helper class for providing sample content for user interfaces created by
- * Android template wizards.
- * <p>
- * TODO: Replace all uses of this class before publishing your app.
- */
 public class Content {
 
-    /**
-     * An array of sample (dummy) items.
-     */
-    public static final List<Parameter> ITEMS = new ArrayList<Parameter>();
+    public static final List<Parameter> Items = new ArrayList<>();
+    public static final Map<String, Parameter> ItemMap = new HashMap<>();
+    private static final Vector<Vector<String>> data = new Vector<>();
 
-    /**
-     * A map of sample (dummy) items, by ID.
-     */
-    public static final Map<String, Parameter> ITEM_MAP = new HashMap<String, Parameter>();
+    private static final InputStream inputFile = new InputStream() {
+        @Override
+        public int read() throws IOException {
+            return 0;
+        }
+    }
 
     private static final int COUNT = 25;
 
+
     static {
-        // Add some sample items.
         for (int i = 1; i <= COUNT; i++) {
             addItem(createDummyItem(i));
         }
     }
 
     private static void addItem(Parameter item) {
-        ITEMS.add(item);
-        ITEM_MAP.put(item.id, item);
+        Items.add(item);
+        ItemMap.put(item.id, item);
     }
 
     private static Parameter createDummyItem(int position) {
@@ -50,9 +53,31 @@ public class Content {
         return builder.toString();
     }
 
-    /**
-     * A dummy item representing a piece of content.
-     */
+    private static Vector<Vector<String>> parseCsv(InputStream file) {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(file));
+        try {
+            Vector<Vector<String>> result = new Vector<>();
+            String line;
+
+            while ((line = reader.readLine()) != null) {
+                result.add(new Vector<>(Arrays.asList(line.split(","))));
+            }
+
+            file.close();
+            return result;
+        } catch (IOException ex) {
+            Log.e("parseCsv", ex.toString());
+            return null;
+        } finally {
+            try {
+                file.close();
+            } catch (IOException e) {
+                Log.e("parseCsv", e.toString());
+            }
+        }
+    }
+
+
     public static class Parameter {
         public final String id;
         public final String content;
