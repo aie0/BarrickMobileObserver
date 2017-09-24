@@ -9,4 +9,10 @@
     <color name="colorWarn">#a00000</color>
     <color name="colorDown">#0000a0</color>
     <color name="colorUnknown">#a000a0</color>
+
+    <color name="colorOkLight">#a7d6b3</color>
+    <color name="colorAlertLight">#ffeab2</color>
+    <color name="colorWarnLight">#d68585</color>
+    <color name="colorDownLight">#c3c3ff</color>
+    <color name="colorUnknownLight">#e7b2ed</color>
 </resources>
