@@ -18,22 +18,25 @@ import edu.uwyo.geckorockets.barrickmobileobserver.R;
 
 public class Content {
 
+    public static int currentRow = 1;
+
     public static final List<Parameter> Items = new ArrayList<>();
     public static final Map<String, Parameter> ItemMap = new HashMap<>();
 
     private static Vector<Vector<String>> data = new Vector<>();
     private static InputStream inputFile = null;
 
-    private static final int COUNT = 25;
+    private static int parameterCount;
 
     static {
         inputFile = MyApplication.getAppContext().getResources().openRawResource(R.raw.demo_data);
+        data = parseCsv(inputFile);
 
-        for (int i = 1; i <= COUNT; i++) {
+        parameterCount = data.elementAt(0).size();
+
+        for (int i = 1; i < parameterCount; i++) {
             addItem(createItem(i));
         }
-
-        data = parseCsv(inputFile);
     }
 
     private static void addItem(Parameter item) {
@@ -42,12 +45,15 @@ public class Content {
     }
 
     private static Parameter createItem(int position) {
-        return new Parameter(String.valueOf(position), "Parameter " + position, "UNIT", makeDetails(position));
+        return new Parameter(data.elementAt(0).elementAt(position),
+                data.elementAt(currentRow).elementAt(position),
+                "Unit",
+                getHistory(position));
     }
 
-    private static String makeDetails(int position) {
+    private static String getHistory(int position) {
         StringBuilder builder = new StringBuilder();
-        builder.append("Details about Item: ").append(position);
+        builder.append("Last 100 Values: ");
         for (int i = 0; i < position; i++) {
             builder.append("\nMore details information here.");
         }
