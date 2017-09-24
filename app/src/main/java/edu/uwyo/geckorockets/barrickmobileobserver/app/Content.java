@@ -75,13 +75,45 @@ public class Content {
 
     private static void calculateStats() {
         for(int i = 0; i < topAvgIndexes.size(); i++){
-            if(currentRow - topAvgIndexes.elementAt(i) > 10)
+            if(currentRow - topAvgIndexes.elementAt(i) > 24)
                 topAvgIndexes.set(i, topAvgIndexes.elementAt(i) + 1);
         }
 
         for(int i = 0; i < averages.size(); i++) {
             averages.set(i, getAverage(i));
         }
+
+        for(int i = 0; i < stdDevs.size(); i++) {
+            stdDevs.set(i, stDev(getDataAverageSubArray(i)));
+        }
+    }
+
+    private static Vector<Double> getDataAverageSubArray(int position) {
+        Vector<Double> sub = new Vector<>();
+        for(int i = currentRow; i >= topAvgIndexes.elementAt(position); i--) {
+            try {
+                sub.add(Double.parseDouble(data.elementAt(i).elementAt(position)));
+            } catch (Exception ex) {
+                sub.add(sentinel);
+            }
+        }
+        return sub;
+    }
+
+    private static double stDev(Vector<Double> numbers) {
+        double sd = 0.0;
+
+        double sum = 0.0;
+        for (int i = 0; i < numbers.size(); i++) {
+            sum += numbers.elementAt(i);
+        }
+        double mean = sum / numbers.size();
+
+        for (int i = 0; i < numbers.size(); i++)
+        {
+            sd += ((numbers.elementAt(i) - mean) * (numbers.elementAt(i) - mean)) / numbers.size();
+        }
+        return Math.sqrt(sd);
     }
 
     private static double getAverage(int position) {
@@ -97,7 +129,7 @@ public class Content {
     }
 
     private static void populate() {
-        for (int i = 1; i < parameterCount; i++) {
+        for (int i = 0; i < parameterCount; i++) {
             addItem(createItem(i));
         }
     }
@@ -118,7 +150,9 @@ public class Content {
     private static String getHistory(int position) {
         StringBuilder builder = new StringBuilder();
         builder.append("Average: ");
-        builder.append(getAverage(position));
+        builder.append(averages.elementAt(position));
+        builder.append("\nStandard Deviation: ");
+        builder.append(stdDevs.elementAt(position));
         return builder.toString();
     }
 
@@ -131,20 +165,20 @@ public class Content {
             value = sentinel;
         }
 
-        double alertUpper = averages.elementAt(position) + stdDevs.elementAt(position);
-        double alertLower = averages.elementAt(position) - stdDevs.elementAt(position);
+        double alertUpper = averages.elementAt(position) + (2 * stdDevs.elementAt(position));
+        double alertLower = averages.elementAt(position) - (2 * stdDevs.elementAt(position));
 
-        double warnUpper = averages.elementAt(position) + (2 * stdDevs.elementAt(position));
-        double warnLower = averages.elementAt(position) - (2 * stdDevs.elementAt(position));
+        double warnUpper = averages.elementAt(position) + (3 * stdDevs.elementAt(position));
+        double warnLower = averages.elementAt(position) - (3 * stdDevs.elementAt(position));
 
         if (value == sentinel)
             return lightColorMap.get(statuses.UNKNOWN);
+        else if (value == 0.0)
+            return lightColorMap.get(statuses.DOWN);
         else if (value > warnUpper || value < warnLower)
             return lightColorMap.get(statuses.WARNING);
         else if (value > alertUpper || value < alertLower)
             return lightColorMap.get(statuses.ALERT);
-        else if (value == 0.0)
-            return lightColorMap.get(statuses.DOWN);
         else
             return lightColorMap.get(statuses.OK);
     }

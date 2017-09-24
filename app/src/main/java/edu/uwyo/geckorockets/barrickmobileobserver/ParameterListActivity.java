@@ -36,6 +36,8 @@ public class ParameterListActivity extends AppCompatActivity {
      */
     private boolean mTwoPane;
 
+    private static boolean once = true;
+
     private enum statuses {OK, ALERT, WARNING, DOWN, UNKNOWN}
     private HashMap<statuses, Integer> colorMap = new HashMap<>();
 
@@ -85,6 +87,15 @@ public class ParameterListActivity extends AppCompatActivity {
         statusPane = (ImageView) findViewById(R.id.statusPane);
 
         setStatus(getWorstStatus());
+
+        if (once) {
+            for (int i = 0; i < 37; i++) {
+                Content.nextRow();
+                setupRecyclerView(recyclerView);
+                setStatus(getWorstStatus());
+            }
+            once = false;
+        }
     }
 
     public void setStatus (statuses newStatus) {
