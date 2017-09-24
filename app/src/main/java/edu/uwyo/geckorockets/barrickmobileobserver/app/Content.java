@@ -18,7 +18,7 @@ import edu.uwyo.geckorockets.barrickmobileobserver.R;
 
 public class Content {
 
-    public static int currentRow = 1;
+    public static int currentRow = 2;
 
     public static List<Parameter> Items = new ArrayList<>();
     public static Map<String, Parameter> ItemMap = new HashMap<>();
@@ -58,7 +58,7 @@ public class Content {
     private static Parameter createItem(int position) {
         return new Parameter(data.elementAt(0).elementAt(position),
                 data.elementAt(currentRow).elementAt(position),
-                "Unit",
+                data.elementAt(1).elementAt(position),
                 getHistory(position));
     }
 
