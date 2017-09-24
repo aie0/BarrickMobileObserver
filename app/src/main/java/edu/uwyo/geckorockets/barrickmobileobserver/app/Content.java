@@ -18,7 +18,7 @@ import edu.uwyo.geckorockets.barrickmobileobserver.R;
 
 public class Content {
 
-    private static int currentRow = 4;
+    private static int currentRow = 2;
 
     public static List<Parameter> Items = new ArrayList<>();
     public static Map<String, Parameter> ItemMap = new HashMap<>();
@@ -34,6 +34,7 @@ public class Content {
 
     private static Vector<Double> averages = new Vector<>();
     private static Vector<Double> stdDevs = new Vector<>();
+    private static Vector<Integer> topAvgIndexes = new Vector<>();
 
     private static final double sentinel = -9999.99;
 
@@ -47,26 +48,18 @@ public class Content {
         inputFile = MyApplication.getAppContext().getResources().openRawResource(R.raw.demo_data);
         data = parseCsv(inputFile);
 
-        Vector<String> averageStrings = data.elementAt(2);
-        for (String average:averageStrings) {
-            double value;
-            try {
-                value = Double.parseDouble(average);
-            } catch (Exception ex){
-                value = sentinel;
-            }
-            averages.add(value);
-        }
+        parameterCount = data.elementAt(0).size();
 
-        Vector<String> stdDevStrings = data.elementAt(3);
-        for (String average:stdDevStrings) {
-            double value;
+        for (int i = 0; i < parameterCount; i++) {
+            topAvgIndexes.add(currentRow);
+
             try {
-                value = Double.parseDouble(average);
-            } catch (Exception ex){
-                value = sentinel;
+                averages.add(Double.parseDouble(data.elementAt(currentRow).elementAt(i)));
+            } catch (Exception ex) {
+                averages.add(sentinel);
             }
-            stdDevs.add(value);
+
+            stdDevs.add(averages.elementAt(i)/2);
         }
 
         populate();
@@ -79,9 +72,23 @@ public class Content {
         populate();
     }
 
-    private static void populate() {
-        parameterCount = data.elementAt(0).size();
+    private static void calculateStats() {
 
+    }
+
+    private static double getAverage(int position) {
+        double sum = 0.0;
+        for (int i = position; i >= topAvgIndexes.elementAt(position); i--) {
+            try {
+                sum += Double.parseDouble(data.elementAt(i).elementAt(position));
+            } catch (Exception ex) {
+                topAvgIndexes.set(position, i);
+            }
+        }
+        return sum / (position - topAvgIndexes.elementAt(position));
+    }
+
+    private static void populate() {
         for (int i = 1; i < parameterCount; i++) {
             addItem(createItem(i));
         }
@@ -102,10 +109,8 @@ public class Content {
 
     private static String getHistory(int position) {
         StringBuilder builder = new StringBuilder();
-        builder.append("Last 100 Values: ");
-        for (int i = 0; i < position; i++) {
-            builder.append("\nMore details information here.");
-        }
+        builder.append("Average: ");
+        builder.append(getAverage(position));
         return builder.toString();
     }
 
