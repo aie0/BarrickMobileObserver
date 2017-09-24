@@ -4,12 +4,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.design.widget.FloatingActionButton;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -110,6 +112,7 @@ public class ParameterListActivity extends AppCompatActivity {
         @Override
         public void onBindViewHolder(final ViewHolder holder, int position) {
             holder.mItem = mValues.get(position);
+            holder.mPane.setImageResource(mValues.get(position).color);
             holder.mIdView.setText(mValues.get(position).id);
             holder.mContentView.setText(mValues.get(position).content);
             holder.mUnitView.setText(mValues.get(position).unit);
@@ -143,6 +146,7 @@ public class ParameterListActivity extends AppCompatActivity {
 
         public class ViewHolder extends RecyclerView.ViewHolder {
             public final View mView;
+            public final ImageView mPane;
             public final TextView mIdView;
             public final TextView mContentView;
             public final TextView mUnitView;
@@ -151,6 +155,7 @@ public class ParameterListActivity extends AppCompatActivity {
             public ViewHolder(View view) {
                 super(view);
                 mView = view;
+                mPane = (ImageView) view.findViewById(R.id.parameterPane);
                 mIdView = (TextView) view.findViewById(R.id.parameterId);
                 mContentView = (TextView) view.findViewById(R.id.parameterValue);
                 mUnitView = (TextView) view.findViewById(R.id.parameterUnit);

@@ -26,9 +26,20 @@ public class Content {
     private static Vector<Vector<String>> data = new Vector<>();
     private static InputStream inputFile = null;
 
+    private enum statuses {OK, ALERT, WARNING, DOWN, UNKNOWN}
+
+    private static HashMap<statuses, Integer> lightColorMap = new HashMap<>();
+
+
     private static int parameterCount;
 
     static {
+        lightColorMap.put(statuses.OK, R.color.colorOkLight);
+        lightColorMap.put(statuses.ALERT, R.color.colorAlertLight);
+        lightColorMap.put(statuses.WARNING, R.color.colorWarnLight);
+        lightColorMap.put(statuses.DOWN, R.color.colorDownLight);
+        lightColorMap.put(statuses.UNKNOWN, R.color.colorUnknownLight);
+
         inputFile = MyApplication.getAppContext().getResources().openRawResource(R.raw.demo_data);
         data = parseCsv(inputFile);
 
@@ -59,7 +70,8 @@ public class Content {
         return new Parameter(data.elementAt(0).elementAt(position),
                 data.elementAt(currentRow).elementAt(position),
                 data.elementAt(1).elementAt(position),
-                getHistory(position));
+                getHistory(position),
+                lightColorMap.get(statuses.WARNING));
     }
 
     private static String getHistory(int position) {
@@ -100,12 +112,14 @@ public class Content {
         public final String content;
         public final String unit;
         public final String details;
+        public final int color;
 
-        public Parameter(String id, String content, String unit, String details) {
+        public Parameter(String id, String content, String unit, String details, int color) {
             this.id = id;
             this.content = content;
             this.unit = unit;
             this.details = details;
+            this.color = color;
         }
 
         @Override
