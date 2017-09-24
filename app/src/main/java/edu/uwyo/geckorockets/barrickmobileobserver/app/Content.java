@@ -70,10 +70,18 @@ public class Content {
         Items = new ArrayList<>();
         ItemMap = new HashMap<>();
         populate();
+        calculateStats();
     }
 
     private static void calculateStats() {
+        for(int i = 0; i < topAvgIndexes.size(); i++){
+            if(currentRow - topAvgIndexes.elementAt(i) > 10)
+                topAvgIndexes.set(i, topAvgIndexes.elementAt(i) + 1);
+        }
 
+        for(int i = 0; i < averages.size(); i++) {
+            averages.set(i, getAverage(i));
+        }
     }
 
     private static double getAverage(int position) {
