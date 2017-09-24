@@ -13,15 +13,21 @@ import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
+import edu.uwyo.geckorockets.barrickmobileobserver.MyApplication;
+import edu.uwyo.geckorockets.barrickmobileobserver.R;
+
 public class Content {
 
     public static final List<Parameter> Items = new ArrayList<>();
     public static final Map<String, Parameter> ItemMap = new HashMap<>();
+
     private static final Vector<Vector<String>> data = new Vector<>();
+    private static InputStream inputFile = null;
 
     private static final int COUNT = 25;
-    
+
     static {
+        inputFile = MyApplication.getAppContext().getResources().openRawResource(R.raw.demo_data);
         for (int i = 1; i <= COUNT; i++) {
             addItem(createDummyItem(i));
         }

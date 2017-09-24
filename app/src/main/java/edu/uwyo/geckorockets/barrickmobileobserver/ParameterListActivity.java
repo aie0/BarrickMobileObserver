@@ -82,8 +82,6 @@ public class ParameterListActivity extends AppCompatActivity {
 
         statusText = (TextView) findViewById(R.id.currentStatus);
         statusPane = (ImageView) findViewById(R.id.statusPane);
-
-        setStatus(statuses.OK);
     }
 
     public void setStatus (statuses newStatus) {
