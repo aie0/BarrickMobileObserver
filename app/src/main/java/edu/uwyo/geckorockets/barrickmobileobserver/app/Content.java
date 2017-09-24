@@ -21,16 +21,19 @@ public class Content {
     public static final List<Parameter> Items = new ArrayList<>();
     public static final Map<String, Parameter> ItemMap = new HashMap<>();
 
-    private static final Vector<Vector<String>> data = new Vector<>();
+    private static Vector<Vector<String>> data = new Vector<>();
     private static InputStream inputFile = null;
 
     private static final int COUNT = 25;
 
     static {
         inputFile = MyApplication.getAppContext().getResources().openRawResource(R.raw.demo_data);
+
         for (int i = 1; i <= COUNT; i++) {
-            addItem(createDummyItem(i));
+            addItem(createItem(i));
         }
+
+        data = parseCsv(inputFile);
     }
 
     private static void addItem(Parameter item) {
@@ -38,7 +41,7 @@ public class Content {
         ItemMap.put(item.id, item);
     }
 
-    private static Parameter createDummyItem(int position) {
+    private static Parameter createItem(int position) {
         return new Parameter(String.valueOf(position), "Parameter " + position, "UNIT", makeDetails(position));
     }
 
