@@ -19,16 +19,8 @@ public class Content {
     public static final Map<String, Parameter> ItemMap = new HashMap<>();
     private static final Vector<Vector<String>> data = new Vector<>();
 
-    private static final InputStream inputFile = new InputStream() {
-        @Override
-        public int read() throws IOException {
-            return 0;
-        }
-    }
-
     private static final int COUNT = 25;
-
-
+    
     static {
         for (int i = 1; i <= COUNT; i++) {
             addItem(createDummyItem(i));
